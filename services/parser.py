@@ -1,6 +1,5 @@
 import fitz
 
-
 def extract_pdf_text(uploaded_file):
 
     pdf = fitz.open(
