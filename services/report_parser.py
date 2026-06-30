@@ -38,6 +38,12 @@ def parse_report(report):
                 "MISSING CONTROLS"
             ),
 
+        "evidence":
+            extract_section(
+                report,
+                "EVIDENCE"
+            ),
+
         "score":
             extract_section(
                 report,
