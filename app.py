@@ -3,15 +3,16 @@ import streamlit as st
 from services.parser import extract_pdf_text
 from services.prompt_builder import build_prompt
 from services.report_parser import parse_report
+from services.document_manager import combine_documents
 
 
 st.set_page_config(
-    page_title="ComplianceMind v0.1",
+    page_title="ComplianceMind v0.2",
     layout="wide"
 )
 
-st.title("ComplianceMind v0.1")
-st.subheader("AI-Powered Compliance Auditor")
+st.title("ComplianceMind v0.2")
+st.subheader("AI-Powered Multi-Document Compliance Auditor")
 
 
 # ======================
@@ -30,14 +31,21 @@ if "company_text" not in st.session_state:
 if "rules_text" not in st.session_state:
     st.session_state.rules_text = ""
 
+if "document_count" not in st.session_state:
+    st.session_state.document_count = 0
+
+if "document_names" not in st.session_state:
+    st.session_state.document_names = []
+
 
 # ======================
 # FILE UPLOAD
 # ======================
 
-company = st.file_uploader(
+company_files = st.file_uploader(
     "Upload Company Documents",
-    type="pdf"
+    type="pdf",
+    accept_multiple_files=True
 )
 
 rules = st.file_uploader(
@@ -52,29 +60,29 @@ rules = st.file_uploader(
 
 if st.button("Analyze"):
 
-    if company and rules:
+    if company_files and rules:
 
-        st.session_state.company_text = (
-            extract_pdf_text(company)
-        )
+        documents = {}
 
-        st.session_state.rules_text = (
-            extract_pdf_text(rules)
-        )
+        for file in company_files:
+            documents[file.name] = extract_pdf_text(file)
 
-        st.session_state.audit_prompt = (
-            build_prompt(
-                st.session_state.company_text,
-                st.session_state.rules_text
-            )
+        st.session_state.company_text = combine_documents(documents)
+
+        st.session_state.document_count = len(documents)
+        st.session_state.document_names = list(documents.keys())
+
+        st.session_state.rules_text = extract_pdf_text(rules)
+
+        st.session_state.audit_prompt = build_prompt(
+            st.session_state.company_text,
+            st.session_state.rules_text
         )
 
         st.session_state.analyzed = True
 
     else:
-        st.error(
-            "Please upload both files."
-        )
+        st.error("Please upload company documents and compliance rules.")
 
 
 # ======================
@@ -85,7 +93,19 @@ if st.session_state.analyzed:
 
     st.divider()
 
-    st.header("Company Document")
+    st.header("Uploaded Company Documents")
+
+    st.write(
+        f"Total Documents: "
+        f"{st.session_state.document_count}"
+    )
+
+    for doc in st.session_state.document_names:
+        st.write(f"✓ {doc}")
+
+    st.divider()
+
+    st.header("Combined Company Documents")
 
     st.text(
         st.session_state.company_text[:1000]
@@ -107,9 +127,9 @@ if st.session_state.analyzed:
     )
 
     st.info(
-        "Paste the prompt into ChatGPT, "
-        "copy the audit report, "
-        "then paste it below."
+        "Copy the prompt into ChatGPT, "
+        "obtain the audit report, "
+        "and paste it below."
     )
 
     audit_result = st.text_area(
@@ -124,69 +144,54 @@ if st.session_state.analyzed:
 
     if audit_result:
 
-        parsed = parse_report(
-            audit_result
-        )
+        parsed = parse_report(audit_result)
 
         st.divider()
 
-        st.header(
-            "Compliance Dashboard"
-        )
+        st.header("Compliance Dashboard")
 
         col1, col2 = st.columns(2)
 
         with col1:
-            st.subheader(
-                "Compliance Score"
-            )
+            st.subheader("Compliance Score")
             st.metric(
                 "Score",
-                parsed["score"]
+                parsed.get("score", "N/A")
             )
 
         with col2:
-            st.subheader(
-                "Risk Level"
-            )
+            st.subheader("Risk Level")
             st.metric(
                 "Risk",
-                parsed["risk"]
+                parsed.get("risk", "N/A")
             )
 
-        st.subheader(
-            "Executive Summary"
-        )
+        st.subheader("Executive Summary")
         st.write(
-            parsed["summary"]
+            parsed.get("summary", "Not Found")
         )
 
-        st.subheader(
-            "Found Controls"
-        )
+        st.subheader("Found Controls")
         st.write(
-            parsed["found"]
+            parsed.get("found", "Not Found")
         )
 
-        st.subheader(
-            "Missing Controls"
-        )
+        st.subheader("Missing Controls")
         st.write(
-            parsed["missing"]
+            parsed.get("missing", "Not Found")
         )
 
-        st.subheader(
-            "Evidence"
-        )
+        st.subheader("Evidence")
         st.write(
-            parsed["evidence"]
+            parsed.get("evidence", "Not Found")
         )
 
-        st.subheader(
-            "Recommendations"
-        )
+        st.subheader("Recommendations")
         st.write(
-            parsed["recommendations"]
+            parsed.get(
+                "recommendations",
+                "Not Found"
+            )
         )
 
         st.download_button(
