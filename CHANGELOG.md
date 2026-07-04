@@ -68,3 +68,22 @@ Example:
 ### Key Insight
 
 ComplianceMind validated that LLMs can perform cross-document compliance reasoning and synthesize evidence across multiple organizational artifacts.
+
+
+## v0.3 - Visual Analytics Dashboard
+
+### Features Added
+
+* Compliance score visualization
+* Found vs missing controls pie chart
+* Risk distribution bar chart
+* Compliance summary metrics
+* Enhanced dashboard experience
+
+### Validation
+
+Successfully demonstrated that compliance findings can be transformed into executive-level visual insights, enabling rapid assessment of organizational compliance posture.
+
+### Key Insight
+
+Users understand risk and compliance status significantly faster through visual analytics than through textual audit reports alone.
