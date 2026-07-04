@@ -1,0 +1,22 @@
+CloudNest AI - Security Policy
+
+Access Control:
+Access is granted according to business requirements.
+
+Least Privilege:
+Employees only receive access necessary for their job roles.
+
+Authentication:
+Strong passwords and MFA are required.
+
+Encryption:
+Sensitive data is encrypted at rest and in transit.
+
+Logging:
+Security logs are collected and retained.
+
+Monitoring:
+Systems are continuously monitored for suspicious activity.
+
+Vulnerability Management:
+Security patches are applied monthly.

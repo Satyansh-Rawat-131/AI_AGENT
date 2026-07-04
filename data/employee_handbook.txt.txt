@@ -1,0 +1,26 @@
+CloudNest AI - Employee Handbook
+
+Company Overview:
+CloudNest AI is a SaaS startup with 25 employees.
+
+Code of Conduct:
+Employees must maintain professionalism and confidentiality.
+
+Password Policy:
+Passwords must be at least 12 characters long.
+Passwords expire every 12 months.
+
+Multi-Factor Authentication:
+MFA is required for all employee accounts.
+
+Employee Onboarding:
+New employees receive security training and account provisioning.
+
+Employee Offboarding:
+Employee access must be revoked within 24 hours of termination.
+
+Remote Work Policy:
+Remote work requires manager approval.
+
+Device Policy:
+Company laptops must be encrypted and regularly updated.

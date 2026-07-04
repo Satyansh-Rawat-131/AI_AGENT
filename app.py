@@ -1,9 +1,12 @@
 import streamlit as st
+import plotly.express as px
+import pandas as pd
 
 from services.parser import extract_pdf_text
 from services.prompt_builder import build_prompt
 from services.report_parser import parse_report
 from services.document_manager import combine_documents
+from services.visualizer import (extract_metrics,coverage_dataframe,risk_dataframe)
 
 
 st.set_page_config(
@@ -149,6 +152,51 @@ if st.session_state.analyzed:
         st.divider()
 
         st.header("Compliance Dashboard")
+
+        metrics = extract_metrics(parsed)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            coverage_df = coverage_dataframe(metrics)
+
+            fig = px.pie(
+                coverage_df,
+                values="Count",
+                names="Status",
+                title="Compliance Coverage")
+
+            st.plotly_chart(
+                fig,
+                use_container_width = True)
+
+        with col2:
+
+            risk_df = risk_dataframe(
+            parsed.get("risk", ""))
+
+            fig = px.bar(
+                risk_df,
+                x="Risk",
+                y="Count",
+                title="Risk Distribution")
+
+            st.plotly_chart(
+                fig,
+                use_container_width=True)
+            
+
+        c1, c2, c3 = st.columns(3)
+
+        with c1:
+            st.metric("Compliance Score",parsed.get("score","N/A"))
+
+        with c2:
+            st.metric("Found Controls",metrics["found"])
+
+        with c3:
+            st.metric("Missing Controls",metrics["missing"])
 
         col1, col2 = st.columns(2)
 

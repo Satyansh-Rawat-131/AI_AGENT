@@ -1,0 +1,19 @@
+CloudNest AI - Vendor Management Policy
+
+Vendor Assessment:
+All vendors undergo security assessments.
+
+Risk Classification:
+Vendors are categorized by risk level.
+
+Access Control:
+Vendor access is limited to business requirements.
+
+Periodic Review:
+Vendor security reviews occur annually.
+
+Third-Party Monitoring:
+Critical vendors are continuously monitored.
+
+Vendor Offboarding:
+Vendor access is revoked immediately after contract termination.
